@@ -1,0 +1,155 @@
+# Smart Feedback Analysis Platform - Docker Compose
+
+version: '3.8'
+
+services:
+  # Main Application Service
+  feedback-analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: feedback-analysis-app
+    restart: unless-stopped
+    environment:
+      # Override config with environment variables
+      - FEEDBACK_ANALYSIS_DATABASE_SERVER=${DB_SERVER:-sqlserver}
+      - FEEDBACK_ANALYSIS_DATABASE_DATABASE=${DB_NAME:-feedback_analysis}
+      - FEEDBACK_ANALYSIS_DATABASE_USERNAME=${DB_USER:-sa}
+      - FEEDBACK_ANALYSIS_DATABASE_PASSWORD=${DB_PASSWORD:-YourPassword123}
+      - FEEDBACK_ANALYSIS_LOGGING_LEVEL=${LOG_LEVEL:-INFO}
+      - FEEDBACK_ANALYSIS_NOTIFICATIONS_ENABLED=${NOTIFICATIONS_ENABLED:-false}
+    volumes:
+      # Persist logs and exports
+      - ./logs:/app/logs
+      - ./exports:/app/exports
+      - ./data:/app/data
+      # Mount config for easy updates
+      - ./config:/app/config
+    ports:
+      - "8000:8000"  # API port (if enabled)
+    depends_on:
+      - sqlserver
+    networks:
+      - feedback-network
+    healthcheck:
+      test: ["CMD", "python", "scripts/health_check.py"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # SQL Server Database (for development/testing)
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: feedback-analysis-db
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${DB_PASSWORD:-YourPassword123}
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      # Persist database data
+      - sqlserver_data:/var/opt/mssql
+      # Initialize database
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - feedback-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${DB_PASSWORD:-YourPassword123} -Q 'SELECT 1'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Redis (for caching and real-time features)
+  redis:
+    image: redis:7-alpine
+    container_name: feedback-analysis-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - feedback-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx (reverse proxy and load balancer)
+  nginx:
+    image: nginx:alpine
+    container_name: feedback-analysis-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - feedback-analysis
+    networks:
+      - feedback-network
+
+  # Monitoring with Grafana (optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: feedback-analysis-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - feedback-network
+    profiles:
+      - monitoring
+
+  # Prometheus (metrics collection, optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: feedback-analysis-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - feedback-network
+    profiles:
+      - monitoring
+
+# Named volumes for data persistence
+volumes:
+  sqlserver_data:
+    driver: local
+  redis_data:
+    driver: local
+  grafana_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+# Custom network for service communication
+networks:
+  feedback-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

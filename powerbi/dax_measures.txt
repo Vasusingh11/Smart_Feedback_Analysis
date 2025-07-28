@@ -1,0 +1,389 @@
+// Smart Feedback Analysis Platform - Power BI DAX Measures
+// Copy these measures into your Power BI model
+
+// ===== BASIC COUNTS =====
+
+Total Feedback = 
+COUNTROWS(feedback)
+
+Unique Customers = 
+DISTINCTCOUNT(feedback[customer_id])
+
+Feedback This Month = 
+CALCULATE(
+    COUNTROWS(feedback),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -1, MONTH)
+)
+
+Feedback Last Month = 
+CALCULATE(
+    COUNTROWS(feedback),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -2, MONTH),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -1, MONTH)
+)
+
+// ===== SENTIMENT METRICS =====
+
+Average Sentiment = 
+AVERAGE(sentiment_analysis[sentiment_score])
+
+Average Sentiment This Month = 
+CALCULATE(
+    AVERAGE(sentiment_analysis[sentiment_score]),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -1, MONTH)
+)
+
+Average Sentiment Last Month = 
+CALCULATE(
+    AVERAGE(sentiment_analysis[sentiment_score]),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -2, MONTH),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -1, MONTH)
+)
+
+Sentiment Trend = 
+VAR CurrentMonth = [Average Sentiment This Month]
+VAR LastMonth = [Average Sentiment Last Month]
+RETURN
+IF(
+    ISBLANK(LastMonth), 
+    BLANK(), 
+    CurrentMonth - LastMonth
+)
+
+// ===== SENTIMENT DISTRIBUTION =====
+
+Positive Count = 
+CALCULATE(
+    COUNTROWS(sentiment_analysis),
+    sentiment_analysis[sentiment_label] = "Positive"
+)
+
+Negative Count = 
+CALCULATE(
+    COUNTROWS(sentiment_analysis),
+    sentiment_analysis[sentiment_label] = "Negative"
+)
+
+Neutral Count = 
+CALCULATE(
+    COUNTROWS(sentiment_analysis),
+    sentiment_analysis[sentiment_label] = "Neutral"
+)
+
+Positive Percentage = 
+DIVIDE([Positive Count], [Total Feedback]) * 100
+
+Negative Percentage = 
+DIVIDE([Negative Count], [Total Feedback]) * 100
+
+Neutral Percentage = 
+DIVIDE([Neutral Count], [Total Feedback]) * 100
+
+// ===== CONFIDENCE METRICS =====
+
+Average Confidence = 
+AVERAGE(sentiment_analysis[confidence_score])
+
+High Confidence Count = 
+CALCULATE(
+    COUNTROWS(sentiment_analysis),
+    sentiment_analysis[confidence_score] > 0.8
+)
+
+High Confidence Percentage = 
+DIVIDE([High Confidence Count], [Total Feedback]) * 100
+
+Low Confidence Count = 
+CALCULATE(
+    COUNTROWS(sentiment_analysis),
+    sentiment_analysis[confidence_score] < 0.3
+)
+
+// ===== RATING METRICS =====
+
+Average Rating = 
+AVERAGE(feedback[rating])
+
+Rating 5 Count = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[rating] = 5
+)
+
+Rating 1 Count = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[rating] = 1
+)
+
+Net Promoter Score = 
+VAR Promoters = CALCULATE(COUNTROWS(feedback), feedback[rating] >= 4)
+VAR Detractors = CALCULATE(COUNTROWS(feedback), feedback[rating] <= 2)
+VAR Total = COUNTROWS(feedback)
+RETURN
+IF(Total > 0, ((Promoters - Detractors) / Total) * 100, BLANK())
+
+// ===== TIME-BASED METRICS =====
+
+Yesterday Feedback = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[timestamp] >= TODAY() - 1 && feedback[timestamp] < TODAY()
+)
+
+Last 7 Days Feedback = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[timestamp] >= TODAY() - 7
+)
+
+Last 30 Days Feedback = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[timestamp] >= TODAY() - 30
+)
+
+Weekly Growth = 
+VAR ThisWeek = CALCULATE(
+    COUNTROWS(feedback),
+    feedback[timestamp] >= TODAY() - 7
+)
+VAR LastWeek = CALCULATE(
+    COUNTROWS(feedback),
+    feedback[timestamp] >= TODAY() - 14 && feedback[timestamp] < TODAY() - 7
+)
+RETURN
+IF(LastWeek > 0, (ThisWeek - LastWeek) / LastWeek * 100, BLANK())
+
+Monthly Growth = 
+VAR ThisMonth = [Feedback This Month]
+VAR LastMonth = [Feedback Last Month]
+RETURN
+IF(LastMonth > 0, (ThisMonth - LastMonth) / LastMonth * 100, BLANK())
+
+// ===== SOURCE ANALYSIS =====
+
+Top Source = 
+VAR TopSourceTable = 
+TOPN(
+    1,
+    SUMMARIZE(feedback, feedback[source], "Count", COUNTROWS(feedback)),
+    [Count], DESC
+)
+RETURN
+MAXX(TopSourceTable, feedback[source])
+
+Email Feedback Count = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[source] = "email"
+)
+
+Survey Feedback Count = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[source] = "survey"
+)
+
+Social Media Feedback Count = 
+CALCULATE(
+    COUNTROWS(feedback),
+    feedback[source] = "social_media"
+)
+
+// ===== TOPIC ANALYSIS =====
+
+Total Topics = 
+DISTINCTCOUNT(topic_analysis[topic])
+
+Most Mentioned Topic = 
+VAR TopTopicTable = 
+TOPN(
+    1,
+    SUMMARIZE(topic_analysis, topic_analysis[topic], "Count", COUNTROWS(topic_analysis)),
+    [Count], DESC
+)
+RETURN
+MAXX(TopTopicTable, topic_analysis[topic])
+
+Topic Mentions = 
+COUNTROWS(topic_analysis)
+
+Average Topic Relevance = 
+AVERAGE(topic_analysis[relevance_score])
+
+// ===== PRODUCT CATEGORY ANALYSIS =====
+
+Top Category = 
+VAR TopCategoryTable = 
+TOPN(
+    1,
+    SUMMARIZE(feedback, feedback[product_category], "Count", COUNTROWS(feedback)),
+    [Count], DESC
+)
+RETURN
+MAXX(TopCategoryTable, feedback[product_category])
+
+Category Sentiment = 
+CALCULATE(
+    AVERAGE(sentiment_analysis[sentiment_score]),
+    USERELATIONSHIP(feedback[feedback_id], sentiment_analysis[feedback_id])
+)
+
+// ===== CUSTOMER ANALYSIS =====
+
+Returning Customers = 
+CALCULATE(
+    DISTINCTCOUNT(feedback[customer_id]),
+    CALCULATE(
+        COUNTROWS(feedback),
+        ALLEXCEPT(feedback, feedback[customer_id])
+    ) > 1
+)
+
+New Customers = 
+[Unique Customers] - [Returning Customers]
+
+Customer Retention Rate = 
+DIVIDE([Returning Customers], [Unique Customers]) * 100
+
+Average Feedback Per Customer = 
+DIVIDE([Total Feedback], [Unique Customers])
+
+// ===== QUALITY METRICS =====
+
+Processing Accuracy = 
+VAR ProcessedFeedback = CALCULATE(
+    COUNTROWS(feedback),
+    RELATEDTABLE(sentiment_analysis)
+)
+RETURN
+DIVIDE(ProcessedFeedback, [Total Feedback]) * 100
+
+Data Quality Score = 
+VAR NonEmptyFeedback = CALCULATE(
+    COUNTROWS(feedback),
+    NOT ISBLANK(feedback[feedback_text]) && feedback[feedback_text] <> ""
+)
+RETURN
+DIVIDE(NonEmptyFeedback, [Total Feedback]) * 100
+
+// ===== ALERT CONDITIONS =====
+
+Sentiment Alert = 
+IF([Average Sentiment] < -0.2, "🔴 Low Sentiment Alert", 
+   IF([Average Sentiment] > 0.3, "🟢 High Satisfaction", "🟡 Normal"))
+
+Volume Alert = 
+VAR CurrentVolume = [Last 7 Days Feedback]
+VAR PreviousVolume = CALCULATE(
+    COUNTROWS(feedback),
+    feedback[timestamp] >= TODAY() - 14 && feedback[timestamp] < TODAY() - 7
+)
+VAR ChangePercent = IF(PreviousVolume > 0, (CurrentVolume - PreviousVolume) / PreviousVolume * 100, 0)
+RETURN
+IF(ChangePercent > 50, "🔴 High Volume Spike", 
+   IF(ChangePercent < -50, "🔴 Low Volume Alert", "🟢 Normal Volume"))
+
+Negative Feedback Alert = 
+IF([Negative Percentage] > 30, "🔴 High Negative Feedback", "🟢 Normal")
+
+// ===== TREND INDICATORS =====
+
+Sentiment Trend Arrow = 
+VAR Trend = [Sentiment Trend]
+RETURN
+IF(Trend > 0.05, "📈", IF(Trend < -0.05, "📉", "➡️"))
+
+Volume Trend Arrow = 
+VAR Growth = [Weekly Growth]
+RETURN
+IF(Growth > 10, "📈", IF(Growth < -10, "📉", "➡️"))
+
+// ===== FORECASTING (Basic) =====
+
+Predicted Next Month Sentiment = 
+VAR Last3Months = CALCULATE(
+    AVERAGE(sentiment_analysis[sentiment_score]),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -3, MONTH)
+)
+VAR Last6Months = CALCULATE(
+    AVERAGE(sentiment_analysis[sentiment_score]),
+    DATESINPERIOD(feedback[timestamp], TODAY(), -6, MONTH)
+)
+VAR Trend = Last3Months - Last6Months
+RETURN
+[Average Sentiment This Month] + Trend
+
+// ===== PERFORMANCE METRICS =====
+
+Response Time (Days) = 
+-- This would need to be calculated based on your response tracking
+-- Example structure:
+-- AVERAGE(DATEDIFF(feedback[timestamp], response[timestamp], DAY))
+
+Resolution Rate = 
+-- This would need to be calculated based on your resolution tracking
+-- Example structure: 
+-- DIVIDE(COUNTROWS(resolved_feedback), COUNTROWS(feedback)) * 100
+
+// ===== COMPARATIVE METRICS =====
+
+Sentiment vs Last Period = 
+VAR CurrentPeriod = [Average Sentiment This Month]
+VAR LastPeriod = [Average Sentiment Last Month]
+RETURN
+IF(CurrentPeriod > LastPeriod, "↗️ Improving", 
+   IF(CurrentPeriod < LastPeriod, "↘️ Declining", "➡️ Stable"))
+
+Best Performing Source = 
+CALCULATE(
+    MAX(feedback[source]),
+    TOPN(1, VALUES(feedback[source]), [Average Sentiment], DESC)
+)
+
+Worst Performing Source = 
+CALCULATE(
+    MAX(feedback[source]),
+    TOPN(1, VALUES(feedback[source]), [Average Sentiment], ASC)
+)
+
+// ===== USAGE INSTRUCTIONS =====
+/*
+HOW TO USE THESE MEASURES:
+
+1. Copy each measure definition
+2. In Power BI Desktop, go to Modeling tab
+3. Click "New Measure"
+4. Paste the DAX code
+5. Name the measure (use the name before the = sign)
+6. Click Enter to save
+
+RECOMMENDED VISUALIZATIONS:
+
+KPI Cards:
+- Total Feedback
+- Average Sentiment  
+- Positive Percentage
+- Unique Customers
+
+Charts:
+- Line Chart: Average Sentiment over time
+- Donut Chart: Sentiment Distribution (Positive/Negative/Neutral %)
+- Bar Chart: Feedback by Source
+- Scatter Plot: Rating vs Sentiment
+- Table: Top Topics with metrics
+
+Filters:
+- Date Range Slicer
+- Source Slicer  
+- Product Category Slicer
+- Rating Slicer
+
+DASHBOARD LAYOUT SUGGESTION:
+
+Row 1: KPI Cards (Total Feedback, Avg Sentiment, Positive %, Growth %)
+Row 2: Sentiment Trend Line Chart, Sentiment Distribution Donut
+Row 3: Source Performance Bar Chart, Top Topics Table
+Row 4: Detailed Feedback Table with filters
+*/

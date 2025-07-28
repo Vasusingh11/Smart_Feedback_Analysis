@@ -76,7 +76,7 @@ An automated customer sentiment analysis platform using NLP, SQL, and Power BI t
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/smart-feedback-analysis.git
+   git clone https://github.com/Vasusingh11/smart-feedback-analysis.git
    cd smart-feedback-analysis
    ```
 
@@ -346,17 +346,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-**Developer**: [Your Name]
-- 📧 Email: [your.email@example.com](mailto:your.email@example.com)
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [github.com/yourusername](https://github.com/yourusername)
+**Developer**: [Vasu Singh]
+- 📧 Email: [mailvasusingh@gmail.com](mailto:mailvasusingh@gmail.com)
+- 💼 LinkedIn: [linkedin.com/in/Vasusingh11](https://linkedin.com/in/Vasusingh11)
+- 🐙 GitHub: [github.com/Vasusingh11](https://github.com/Vasusingh11)
 
-**Project Link**: [https://github.com/yourusername/smart-feedback-analysis](https://github.com/yourusername/smart-feedback-analysis)
+**Project Link**: [https://github.com/Vasusingh11/smart-feedback-analysis](https://github.com/Vasusingh11/smart-feedback-analysis)
 
 ### Getting Help
 - 📖 Check the [documentation](docs/) first
-- 🐛 Report bugs via [GitHub Issues](https://github.com/yourusername/smart-feedback-analysis/issues)
-- 💬 Ask questions in [Discussions](https://github.com/yourusername/smart-feedback-analysis/discussions)
+- 🐛 Report bugs via [GitHub Issues](https://github.com/Vasusingh11/smart-feedback-analysis/issues)
+- 💬 Ask questions in [Discussions](https://github.com/Vasusingh11/smart-feedback-analysis/discussions)
 - 📧 Email for enterprise support
 
 ## 🙏 Acknowledgments
@@ -369,10 +369,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📈 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/yourusername/smart-feedback-analysis)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/smart-feedback-analysis)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/smart-feedback-analysis)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/smart-feedback-analysis)
+![GitHub stars](https://img.shields.io/github/stars/Vasusingh11/smart-feedback-analysis)
+![GitHub forks](https://img.shields.io/github/forks/Vasusingh11/smart-feedback-analysis)
+![GitHub issues](https://img.shields.io/github/issues/Vasusingh11/smart-feedback-analysis)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Vasusingh11/smart-feedback-analysis)
 
 ---
 

@@ -1,0 +1,338 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: TestPassword123!
+          MSSQL_PID: Express
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P TestPassword123! -Q 'SELECT 1'"
+          --health-interval=30s
+          --health-timeout=10s
+          --health-retries=5
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y unixodbc-dev
+        
+        # Install Microsoft ODBC Driver for SQL Server
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+        sudo apt-get update
+        sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-mock
+    
+    - name: Download NLTK data
+      run: |
+        python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('vader_lexicon'); nltk.download('wordnet'); nltk.download('omw-1.4')"
+    
+    - name: Set up test database
+      env:
+        TEST_DB_SERVER: localhost
+        TEST_DB_PASSWORD: TestPassword123!
+      run: |
+        # Wait for SQL Server to be ready
+        sleep 30
+        
+        # Create test database
+        sqlcmd -S localhost -U sa -P TestPassword123! -Q "CREATE DATABASE feedback_analysis_test;"
+        
+        # Run schema setup
+        python scripts/setup_database.py --test-mode
+    
+    - name: Run linting
+      run: |
+        pip install flake8 black isort
+        
+        # Check code formatting
+        black --check --diff src/
+        
+        # Check import sorting
+        isort --check-only --diff src/
+        
+        # Check PEP 8 compliance
+        flake8 src/ --max-line-length=100 --ignore=E203,W503
+    
+    - name: Run type checking
+      run: |
+        pip install mypy
+        mypy src/ --ignore-missing-imports --no-strict-optional
+    
+    - name: Run unit tests
+      env:
+        FEEDBACK_ANALYSIS_DATABASE_SERVER: localhost
+        FEEDBACK_ANALYSIS_DATABASE_DATABASE: feedback_analysis_test
+        FEEDBACK_ANALYSIS_DATABASE_USERNAME: sa
+        FEEDBACK_ANALYSIS_DATABASE_PASSWORD: TestPassword123!
+        FEEDBACK_ANALYSIS_TESTING_ENABLED: true
+      run: |
+        pytest tests/ -v --cov=src --cov-report=xml --cov-report=html --cov-fail-under=80
+    
+    - name: Run integration tests
+      env:
+        FEEDBACK_ANALYSIS_DATABASE_SERVER: localhost
+        FEEDBACK_ANALYSIS_DATABASE_DATABASE: feedback_analysis_test
+        FEEDBACK_ANALYSIS_DATABASE_USERNAME: sa
+        FEEDBACK_ANALYSIS_DATABASE_PASSWORD: TestPassword123!
+      run: |
+        python scripts/run_analysis.py sample --count 100
+        python scripts/run_analysis.py run
+        python scripts/health_check.py --exit-code
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+    
+    - name: Generate test report
+      if: always()
+      run: |
+        pip install pytest-html
+        pytest tests/ --html=tests/reports/report.html --self-contained-html || true
+    
+    - name: Upload test artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          tests/reports/
+          htmlcov/
+          coverage.xml
+
+  security:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install security tools
+      run: |
+        pip install bandit safety
+    
+    - name: Run security scan with Bandit
+      run: |
+        bandit -r src/ -f json -o bandit-report.json || true
+        bandit -r src/ -f txt
+    
+    - name: Check for known vulnerabilities
+      run: |
+        safety check --json --output safety-report.json || true
+        safety check
+    
+    - name: Upload security artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/feedback-analysis:latest
+          ${{ secrets.DOCKER_USERNAME }}/feedback-analysis:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Test Docker image
+      run: |
+        docker run --rm ${{ secrets.DOCKER_USERNAME }}/feedback-analysis:latest python scripts/health_check.py
+
+  performance:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install memory-profiler psutil
+    
+    - name: Download NLTK data
+      run: |
+        python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('vader_lexicon')"
+    
+    - name: Run performance tests
+      run: |
+        python tests/performance/benchmark_sentiment.py
+        python tests/performance/benchmark_topics.py
+    
+    - name: Memory profiling
+      run: |
+        python -m memory_profiler tests/performance/memory_test.py
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install documentation tools
+      run: |
+        pip install sphinx sphinx-rtd-theme
+        pip install -r requirements.txt
+    
+    - name: Build documentation
+      run: |
+        cd docs/
+        sphinx-build -b html . _build/html
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build/html
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [test, security, build]
+    if: always()
+    
+    steps:
+    - name: Notify Slack on success
+      if: ${{ needs.test.result == 'success' && needs.security.result == 'success' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        text: '✅ CI/CD Pipeline completed successfully!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    
+    - name: Notify Slack on failure
+      if: ${{ needs.test.result == 'failure' || needs.security.result == 'failure' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        text: '❌ CI/CD Pipeline failed!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test, security, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your deployment steps here
+        # Example: kubectl apply -f k8s/
+        # Example: helm upgrade feedback-analysis ./helm-chart
+    
+    - name: Run smoke tests
+      run: |
+        echo "Running smoke tests..."
+        # Add smoke tests for deployed application
+        # curl -f http://staging.yourdomain.com/health
+    
+    - name: Deploy to production
+      if: success()
+      run: |
+        echo "Deploying to production environment..."
+        # Add production deployment steps
+    
+    - name: Create release
+      if: success()
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          Automated release from commit ${{ github.sha }}
+          
+          Changes in this release:
+          ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
