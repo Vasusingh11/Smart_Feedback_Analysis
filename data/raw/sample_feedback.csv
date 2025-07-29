@@ -1,0 +1,101 @@
+feedback_id,customer_id,feedback_text,source,product_category,rating,timestamp
+FB_0000,CUST_0000,Product stopped working after two days. Quality control seems non-existent. Overall satisfied.,survey,Books,1,2025-06-24 08:40:51.227270
+FB_0001,CUST_0000,Worst online shopping experience ever. Product was defective and customer service was rude.,phone,Sports,1,2025-06-21 17:43:51.227291
+FB_0002,CUST_0000,Received wrong item and getting a replacement has been a nightmare. Poor service overall. Highly recommend.,review,Electronics,2,2025-05-28 12:28:51.227298
+FB_0003,CUST_0001,Fast shipping and perfect packaging. The item arrived exactly as described. Overall satisfied.,website,Sports,5,2025-06-11 04:42:51.227305
+FB_0004,CUST_0001,Great value for money! The product exceeded my expectations and works perfectly.,review,Sports,5,2025-06-14 11:30:51.227312
+FB_0005,CUST_0001,Amazing quality and design. The product is even better than the photos showed. Will shop again.,survey,Books,4,2025-05-30 04:20:51.227318
+FB_0006,CUST_0002,Very disappointed with this purchase. The product broke after just one week of normal use. Thanks!,social_media,Clothing,2,2025-06-14 00:03:51.227324
+FB_0007,CUST_0002,Fast shipping and perfect packaging. The item arrived exactly as described. Will shop again.,website,Books,5,2025-05-09 06:19:51.227330
+FB_0008,CUST_0002,"Standard delivery time and packaging. Product works as expected, nothing special. Overall satisfied.",survey,Sports,3,2025-05-24 10:57:51.227334
+FB_0009,CUST_0003,Worst online shopping experience ever. Product was defective and customer service was rude.,chat,Books,1,2025-05-06 22:01:51.227340
+FB_0010,CUST_0003,Excellent customer service team. They resolved my issue within minutes and were very professional.,chat,Automotive,4,2025-07-18 21:15:51.227345
+FB_0011,CUST_0003,Great value for money! The product exceeded my expectations and works perfectly. Thanks!,review,Clothing,4,2025-05-27 01:20:51.227349
+FB_0012,CUST_0004,Excellent website experience. Easy to navigate and checkout was smooth.,chat,Home & Garden,4,2025-04-30 19:23:51.227354
+FB_0013,CUST_0004,Received wrong item and getting a replacement has been a nightmare. Poor service overall. Thanks!,survey,Books,1,2025-06-10 23:07:51.227358
+FB_0014,CUST_0004,Great value for money! The product exceeded my expectations and works perfectly.,survey,Beauty,5,2025-07-02 06:05:51.227362
+FB_0015,CUST_0005,Delivery was extremely slow and the package arrived damaged. Very frustrating experience. Could be improved.,chat,Beauty,1,2025-07-25 08:27:51.227366
+FB_0016,CUST_0005,Very disappointed with this purchase. The product broke after just one week of normal use. Highly recommend.,phone,Automotive,1,2025-06-05 06:34:51.227370
+FB_0017,CUST_0005,Terrible customer service experience. Took days to get a response and they were unhelpful. Highly recommend.,email,Electronics,2,2025-05-07 19:06:51.227374
+FB_0018,CUST_0006,Worst online shopping experience ever. Product was defective and customer service was rude. Highly recommend.,social_media,Automotive,1,2025-07-09 08:31:51.227378
+FB_0019,CUST_0006,It's fine for the price. Not the best quality but acceptable for occasional use. Will shop again.,website,Sports,3,2025-06-21 10:26:51.227382
+FB_0020,CUST_0006,Completely unsatisfied. The product doesn't work as advertised and return process is complicated. Could be improved.,chat,Home & Garden,2,2025-06-22 21:06:51.227386
+FB_0021,CUST_0007,"Product is okay, does what it's supposed to do. Nothing exceptional but meets basic needs. Could be improved.",survey,Beauty,3,2025-05-17 20:00:51.227390
+FB_0022,CUST_0007,Average website experience. Found what I needed but navigation could be better. Thanks!,website,Electronics,3,2025-07-20 13:02:51.227393
+FB_0023,CUST_0007,Average experience overall. Delivery was on time and product matches the description.,survey,Books,3,2025-06-24 12:38:51.227397
+FB_0024,CUST_0008,Received wrong item and getting a replacement has been a nightmare. Poor service overall. Could be improved.,social_media,Automotive,1,2025-06-13 10:54:51.227401
+FB_0025,CUST_0008,Outstanding experience from start to finish. Will definitely order again! Thanks!,chat,Sports,5,2025-07-23 22:53:51.227405
+FB_0026,CUST_0008,Worst online shopping experience ever. Product was defective and customer service was rude. Highly recommend.,social_media,Books,1,2025-07-13 02:56:51.227409
+FB_0027,CUST_0009,Website is confusing and checkout failed multiple times. Very poor user experience. Highly recommend.,email,Beauty,2,2025-07-03 14:11:51.227413
+FB_0028,CUST_0009,Fantastic customer support! They went above and beyond to help me. Will shop again.,review,Clothing,5,2025-05-22 14:40:51.227417
+FB_0029,CUST_0009,Fast shipping and perfect packaging. The item arrived exactly as described. Overall satisfied.,chat,Beauty,5,2025-07-01 16:21:51.227421
+FB_0030,CUST_0010,Perfect product for my needs. Easy to use and great build quality.,chat,Books,5,2025-06-15 14:22:51.227425
+FB_0031,CUST_0010,Outstanding experience from start to finish. Will definitely order again! Could be improved.,social_media,Books,5,2025-05-27 03:09:51.227429
+FB_0032,CUST_0010,Average website experience. Found what I needed but navigation could be better. Highly recommend.,social_media,Beauty,3,2025-05-07 22:49:51.227433
+FB_0033,CUST_0011,Website is confusing and checkout failed multiple times. Very poor user experience. Will shop again.,phone,Beauty,1,2025-05-30 18:32:51.227437
+FB_0034,CUST_0011,Completely unsatisfied. The product doesn't work as advertised and return process is complicated.,review,Electronics,1,2025-07-25 11:54:51.227441
+FB_0035,CUST_0011,"Product is okay, does what it's supposed to do. Nothing exceptional but meets basic needs. Overall satisfied.",email,Sports,3,2025-06-16 12:57:51.227444
+FB_0036,CUST_0012,It's fine for the price. Not the best quality but acceptable for occasional use. Overall satisfied.,review,Electronics,3,2025-07-17 15:23:51.227448
+FB_0037,CUST_0012,Average website experience. Found what I needed but navigation could be better. Could be improved.,survey,Beauty,3,2025-05-04 00:31:51.227452
+FB_0038,CUST_0012,Worst online shopping experience ever. Product was defective and customer service was rude. Will shop again.,phone,Sports,2,2025-07-09 23:39:51.227456
+FB_0039,CUST_0013,Completely unsatisfied. The product doesn't work as advertised and return process is complicated. Overall satisfied.,email,Automotive,2,2025-05-15 09:00:51.227460
+FB_0040,CUST_0013,Amazing quality and design. The product is even better than the photos showed. Highly recommend.,phone,Sports,5,2025-07-19 11:36:51.227464
+FB_0041,CUST_0013,Okay experience. No major complaints but nothing to get excited about either. Will shop again.,email,Beauty,3,2025-07-12 16:25:51.227467
+FB_0042,CUST_0014,Fair pricing for what you get. Quality is reasonable but not outstanding.,survey,Sports,3,2025-05-15 04:21:51.227481
+FB_0043,CUST_0014,Product meets basic requirements. Installation was straightforward but manual could be clearer. Highly recommend.,website,Home & Garden,3,2025-07-11 22:33:51.227485
+FB_0044,CUST_0014,Great value for money! The product exceeded my expectations and works perfectly. Could be improved.,email,Clothing,5,2025-05-19 11:39:51.227489
+FB_0045,CUST_0015,Fast shipping and perfect packaging. The item arrived exactly as described. Highly recommend.,email,Clothing,5,2025-07-16 22:58:51.227493
+FB_0046,CUST_0015,Average website experience. Found what I needed but navigation could be better.,social_media,Sports,3,2025-05-13 09:21:51.227497
+FB_0047,CUST_0015,Excellent website experience. Easy to navigate and checkout was smooth. Highly recommend.,social_media,Beauty,5,2025-07-17 20:06:51.227501
+FB_0048,CUST_0016,Perfect product for my needs. Easy to use and great build quality. Will shop again.,social_media,Books,5,2025-06-18 16:27:51.227505
+FB_0049,CUST_0016,Completely unsatisfied. The product doesn't work as advertised and return process is complicated. Highly recommend.,review,Beauty,1,2025-07-11 14:59:51.227514
+FB_0050,CUST_0016,Fair pricing for what you get. Quality is reasonable but not outstanding.,review,Clothing,3,2025-07-14 11:40:51.227518
+FB_0051,CUST_0017,Delivery was extremely slow and the package arrived damaged. Very frustrating experience. Highly recommend.,phone,Electronics,1,2025-05-10 16:04:51.227522
+FB_0052,CUST_0017,"Standard delivery time and packaging. Product works as expected, nothing special. Overall satisfied.",phone,Clothing,3,2025-06-13 08:07:51.227525
+FB_0053,CUST_0017,Fast shipping and perfect packaging. The item arrived exactly as described. Will shop again.,survey,Sports,5,2025-06-23 19:43:51.227530
+FB_0054,CUST_0018,Perfect product for my needs. Easy to use and great build quality. Could be improved.,social_media,Beauty,5,2025-05-03 14:23:51.227534
+FB_0055,CUST_0018,"Product is okay, does what it's supposed to do. Nothing exceptional but meets basic needs. Overall satisfied.",email,Electronics,3,2025-05-23 23:25:51.227538
+FB_0056,CUST_0018,Received wrong item and getting a replacement has been a nightmare. Poor service overall. Overall satisfied.,email,Beauty,2,2025-04-29 18:03:51.227543
+FB_0057,CUST_0019,Terrible customer service experience. Took days to get a response and they were unhelpful. Could be improved.,survey,Electronics,2,2025-07-13 09:04:51.227548
+FB_0058,CUST_0019,Fast shipping and perfect packaging. The item arrived exactly as described. Overall satisfied.,chat,Books,5,2025-05-06 20:13:51.227552
+FB_0059,CUST_0019,Poor quality for the price. The product looks nothing like the description or photos. Highly recommend.,website,Sports,1,2025-07-04 06:49:51.227556
+FB_0060,CUST_0020,Average experience overall. Delivery was on time and product matches the description. Overall satisfied.,website,Clothing,3,2025-05-04 21:47:51.227560
+FB_0061,CUST_0020,Fast shipping and perfect packaging. The item arrived exactly as described. Could be improved.,phone,Clothing,5,2025-05-29 09:48:51.227565
+FB_0062,CUST_0020,"The product is alright. Some features work well, others could be improved. Highly recommend.",website,Beauty,3,2025-06-10 13:38:51.227569
+FB_0063,CUST_0021,Impressed with the quick response to my inquiry and fast resolution.,review,Electronics,5,2025-07-18 18:41:51.227573
+FB_0064,CUST_0021,Impressed with the quick response to my inquiry and fast resolution. Could be improved.,review,Beauty,4,2025-07-16 14:36:51.227577
+FB_0065,CUST_0021,Outstanding experience from start to finish. Will definitely order again! Thanks!,phone,Electronics,5,2025-06-10 17:03:51.227582
+FB_0066,CUST_0022,Perfect product for my needs. Easy to use and great build quality. Could be improved.,phone,Beauty,4,2025-05-26 18:51:51.227586
+FB_0067,CUST_0022,Great value for money! The product exceeded my expectations and works perfectly. Could be improved.,email,Automotive,5,2025-07-20 20:03:51.227590
+FB_0068,CUST_0022,Amazing quality and design. The product is even better than the photos showed. Thanks!,survey,Electronics,5,2025-06-13 07:49:51.227594
+FB_0069,CUST_0023,Worst online shopping experience ever. Product was defective and customer service was rude.,review,Electronics,1,2025-07-04 08:29:51.227598
+FB_0070,CUST_0023,Fantastic customer support! They went above and beyond to help me. Overall satisfied.,chat,Clothing,5,2025-07-04 19:36:51.227602
+FB_0071,CUST_0023,Average website experience. Found what I needed but navigation could be better. Highly recommend.,website,Home & Garden,3,2025-07-13 08:10:51.227606
+FB_0072,CUST_0024,Perfect product for my needs. Easy to use and great build quality. Will shop again.,social_media,Automotive,5,2025-05-04 00:25:51.227610
+FB_0073,CUST_0024,Very disappointed with this purchase. The product broke after just one week of normal use.,chat,Electronics,2,2025-07-13 22:06:51.227614
+FB_0074,CUST_0024,Impressed with the quick response to my inquiry and fast resolution. Could be improved.,review,Electronics,4,2025-05-22 07:28:51.227618
+FB_0075,CUST_0025,Impressed with the quick response to my inquiry and fast resolution. Highly recommend.,website,Clothing,5,2025-05-31 17:52:51.227622
+FB_0076,CUST_0025,Website is confusing and checkout failed multiple times. Very poor user experience. Could be improved.,chat,Books,1,2025-06-05 07:34:51.227626
+FB_0077,CUST_0025,Excellent website experience. Easy to navigate and checkout was smooth.,review,Books,5,2025-06-14 17:13:51.227631
+FB_0078,CUST_0026,It's fine for the price. Not the best quality but acceptable for occasional use. Overall satisfied.,review,Books,3,2025-05-11 07:18:51.227634
+FB_0079,CUST_0026,Fast shipping and perfect packaging. The item arrived exactly as described. Thanks!,review,Automotive,4,2025-06-26 04:13:51.227638
+FB_0080,CUST_0026,Excellent website experience. Easy to navigate and checkout was smooth. Thanks!,chat,Electronics,4,2025-06-02 18:08:51.227642
+FB_0081,CUST_0027,Product meets basic requirements. Installation was straightforward but manual could be clearer. Could be improved.,social_media,Automotive,3,2025-05-17 09:18:51.227646
+FB_0082,CUST_0027,Fantastic customer support! They went above and beyond to help me.,review,Automotive,4,2025-07-13 16:24:51.227650
+FB_0083,CUST_0027,Terrible customer service experience. Took days to get a response and they were unhelpful. Thanks!,email,Sports,1,2025-07-14 16:46:51.227654
+FB_0084,CUST_0028,Website is confusing and checkout failed multiple times. Very poor user experience. Overall satisfied.,social_media,Electronics,2,2025-06-14 05:29:51.227658
+FB_0085,CUST_0028,Terrible customer service experience. Took days to get a response and they were unhelpful. Will shop again.,review,Automotive,2,2025-07-20 09:46:51.227661
+FB_0086,CUST_0028,Product meets basic requirements. Installation was straightforward but manual could be clearer.,chat,Automotive,3,2025-06-09 04:08:51.227665
+FB_0087,CUST_0029,Received wrong item and getting a replacement has been a nightmare. Poor service overall. Overall satisfied.,chat,Automotive,1,2025-05-29 14:55:51.227670
+FB_0088,CUST_0029,Absolutely love this product! The quality is outstanding and delivery was super fast.,phone,Books,5,2025-07-11 08:35:51.227675
+FB_0089,CUST_0029,Excellent website experience. Easy to navigate and checkout was smooth. Highly recommend.,social_media,Electronics,5,2025-06-12 18:10:51.227679
+FB_0090,CUST_0030,Great value for money! The product exceeded my expectations and works perfectly. Could be improved.,survey,Automotive,5,2025-05-19 11:11:51.227683
+FB_0091,CUST_0030,Received wrong item and getting a replacement has been a nightmare. Poor service overall. Overall satisfied.,social_media,Automotive,1,2025-05-06 00:45:51.227686
+FB_0092,CUST_0030,Impressed with the quick response to my inquiry and fast resolution. Could be improved.,review,Beauty,4,2025-05-15 16:37:51.227690
+FB_0093,CUST_0031,Product stopped working after two days. Quality control seems non-existent. Will shop again.,social_media,Automotive,1,2025-05-01 08:09:51.227694
+FB_0094,CUST_0031,Delivery was extremely slow and the package arrived damaged. Very frustrating experience. Overall satisfied.,review,Automotive,1,2025-07-06 21:14:51.227698
+FB_0095,CUST_0031,Fast shipping and perfect packaging. The item arrived exactly as described. Will shop again.,email,Home & Garden,5,2025-05-10 04:32:51.227702
+FB_0096,CUST_0032,Absolutely love this product! The quality is outstanding and delivery was super fast. Overall satisfied.,survey,Sports,5,2025-06-22 12:53:51.227706
+FB_0097,CUST_0032,Outstanding experience from start to finish. Will definitely order again! Will shop again.,review,Automotive,5,2025-06-17 06:13:51.227710
+FB_0098,CUST_0032,Great value for money! The product exceeded my expectations and works perfectly. Highly recommend.,survey,Sports,5,2025-06-02 22:56:51.227715
+FB_0099,CUST_0033,Product stopped working after two days. Quality control seems non-existent. Could be improved.,review,Electronics,2,2025-05-28 07:11:51.227719

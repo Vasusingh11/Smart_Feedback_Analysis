@@ -1,0 +1,71 @@
+{
+  "total_feedback": 100,
+  "analyzed_feedback": 100,
+  "analysis_date": "2025-07-28T20:03:51.269209",
+  "sentiment_distribution": {
+    "Positive": 62,
+    "Negative": 36,
+    "Neutral": 2
+  },
+  "average_confidence": 0.55989,
+  "source_analysis": {
+    "survey": {
+      "count": 15,
+      "avg_sentiment": 0.3560666666666667
+    },
+    "phone": {
+      "count": 11,
+      "avg_sentiment": 0.02572727272727274
+    },
+    "review": {
+      "count": 21,
+      "avg_sentiment": 0.27509523809523806
+    },
+    "website": {
+      "count": 10,
+      "avg_sentiment": 0.4264
+    },
+    "social_media": {
+      "count": 16,
+      "avg_sentiment": 0.18606250000000002
+    },
+    "chat": {
+      "count": 15,
+      "avg_sentiment": 0.17866666666666667
+    },
+    "email": {
+      "count": 12,
+      "avg_sentiment": 0.21291666666666667
+    }
+  },
+  "category_analysis": {
+    "Books": {
+      "count": 15,
+      "avg_sentiment": 0.26553333333333334
+    },
+    "Sports": {
+      "count": 16,
+      "avg_sentiment": 0.226375
+    },
+    "Electronics": {
+      "count": 18,
+      "avg_sentiment": 0.11894444444444442
+    },
+    "Clothing": {
+      "count": 11,
+      "avg_sentiment": 0.38572727272727275
+    },
+    "Automotive": {
+      "count": 18,
+      "avg_sentiment": 0.13388888888888886
+    },
+    "Home & Garden": {
+      "count": 5,
+      "avg_sentiment": 0.43
+    },
+    "Beauty": {
+      "count": 17,
+      "avg_sentiment": 0.3134117647058824
+    }
+  }
+}

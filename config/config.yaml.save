@@ -1,0 +1,197 @@
+# Smart Feedback Analysis Platform Configuration
+
+# Database Configuration
+database:
+  server: "localhost"  # Your SQL Server instance
+  database: "feedback_analysis"
+  username: "sa"  # Your database username
+  password: "YourPassword123"  # Your database password
+  driver: "ODBC Driver 17 for SQL Server"
+  
+# Processing Configuration
+processing:
+  batch_size: 1000  # Number of records to process at once
+  max_retries: 3    # Maximum retry attempts for failed operations
+  retry_delay: 30   # Delay between retries (seconds)
+
+# Sentiment Analysis Configuration
+sentiment_analysis:
+  vader_weight: 0.6      # Weight for VADER sentiment (0-1)
+  textblob_weight: 0.4   # Weight for TextBlob sentiment (0-1)
+  positive_threshold: 0.05   # Minimum score for positive sentiment
+  negative_threshold: -0.05  # Maximum score for negative sentiment
+  batch_size: 1000       # Batch size for sentiment processing
+  confidence_threshold: 0.3  # Minimum confidence to save results
+
+# Topic Extraction Configuration
+topic_extraction:
+  max_features: 100      # Maximum TF-IDF features
+  min_df: 2             # Minimum document frequency
+  max_df: 0.95          # Maximum document frequency ratio
+  ngram_range: [1, 2]   # N-gram range [min, max]
+  n_topics: 10          # Number of topics to extract
+  relevance_threshold: 0.2  # Minimum relevance to save topic assignment
+
+# Logging Configuration
+logging:
+  level: "INFO"         # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "logs/pipeline.log"
+  max_file_size: "10MB"  # Maximum log file size
+  backup_count: 5        # Number of backup log files
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Automation & Scheduling
+automation:
+  enabled: true
+  schedule:
+    main_pipeline: "0 */4 * * *"    # Every 4 hours (cron format)
+    daily_report: "0 9 * * *"       # Daily at 9 AM
+    weekly_cleanup: "0 2 * * 0"     # Weekly on Sunday at 2 AM
+    monthly_maintenance: "0 1 1 * *" # Monthly on 1st at 1 AM
+
+# Notification Configuration
+notifications:
+  enabled: false
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    username: "your-email@gmail.com"
+    password: "your-app-password"
+    recipients: ["admin@company.com", "data-team@company.com"]
+    subject_prefix: "[Feedback Analysis]"
+  slack:
+    enabled: false
+    webhook_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+    channel: "#data-alerts"
+  teams:
+    enabled: false
+    webhook_url: "https://outlook.office.com/webhook/YOUR/TEAMS/WEBHOOK"
+
+# Maintenance Configuration
+maintenance:
+  enabled: true
+  days_to_keep: 365      # Days of data to retain
+  cleanup_frequency: 7   # Days between cleanup runs
+  index_rebuild: true    # Rebuild indexes during maintenance
+  update_statistics: true # Update table statistics
+
+# Performance Configuration
+performance:
+  connection_pool_size: 10
+  max_overflow: 20
+  pool_pre_ping: true
+  query_timeout: 300     # Query timeout in seconds
+  bulk_insert_batch: 1000
+  parallel_processing: true
+  max_workers: 4         # Number of parallel workers
+
+# Feature Flags
+features:
+  enable_topic_extraction: true
+  enable_sentiment_analysis: true
+  enable_real_time_processing: false
+  enable_advanced_analytics: true
+  enable_data_export: true
+  enable_api_endpoints: false
+
+# Data Export Configuration
+data_export:
+  enabled: true
+  formats: ["csv", "excel", "json"]
+  output_directory: "exports/"
+  schedule: "0 6 * * 1"  # Weekly on Monday at 6 AM
+  retention_days: 30     # Days to keep export files
+
+# Security Configuration
+security:
+  encrypt_sensitive_data: true
+  mask_customer_data: true
+  audit_logging: true
+  max_login_attempts: 3
+  session_timeout: 3600  # Session timeout in seconds
+
+# Power BI Integration
+powerbi:
+  enabled: true
+  refresh_schedule: "0 */2 * * *"  # Every 2 hours
+  dataset_id: "your-powerbi-dataset-id"
+  workspace_id: "your-powerbi-workspace-id"
+  service_principal:
+    client_id: "your-client-id"
+    client_secret: "your-client-secret"
+    tenant_id: "your-tenant-id"
+
+# API Configuration
+api:
+  enabled: false
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  cors_origins: ["http://localhost:3000"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+
+# Monitoring & Alerts
+monitoring:
+  enabled: true
+  health_check_interval: 300  # Health check every 5 minutes
+  alert_thresholds:
+    error_rate: 0.05          # Alert if error rate > 5%
+    processing_delay: 3600    # Alert if processing delayed > 1 hour
+    disk_usage: 0.85          # Alert if disk usage > 85%
+    memory_usage: 0.90        # Alert if memory usage > 90%
+
+# Advanced Analytics
+advanced_analytics:
+  enabled: true
+  anomaly_detection: true
+  trend_analysis: true
+  sentiment_forecasting: false
+  customer_segmentation: true
+  topic_evolution_tracking: true
+
+# Testing Configuration
+testing:
+  enabled: true
+  sample_data_size: 1000
+  test_database: "feedback_analysis_test"
+  mock_external_services: true
+  performance_testing: false
+
+# Development Configuration
+development:
+  debug_mode: false
+  verbose_logging: false
+  skip_notifications: true
+  use_sample_data: false
+  profile_performance: false
+
+# Environment Specific Overrides
+# These can be overridden by environment variables
+# Environment variables use format: FEEDBACK_ANALYSIS_<SECTION>_<KEY>
+# Example: FEEDBACK_ANALYSIS_DATABASE_PASSWORD=secret123
+environment:
+  production:
+    logging:
+      level: "WARNING"
+    performance:
+      connection_pool_size: 20
+    notifications:
+      enabled: true
+  
+  staging:
+    logging:
+      level: "INFO"
+    testing:
+      enabled: true
+  
+  development:
+    logging:
+      level: "DEBUG"
+    development:
+      debug_mode: true
+      verbose_logging: true
+:wq
+
